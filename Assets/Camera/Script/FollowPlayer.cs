@@ -7,6 +7,6 @@ public class FollowPlayer : MonoBehaviour {
 	public float speed;
 
 	void FixedUpdate () {
-		transform.position = new Vector3 (target.position.x, target.position.y + 20, transform.position.z);
+		transform.position = Vector3.Lerp (transform.position, new Vector3(target.position.x, target.position.y, -10), speed);
 	}
 }

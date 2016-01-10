@@ -17,7 +17,7 @@ public class Player : MonoBehaviour {
 	private int score, lvl, lvlScore; // lvlScore = scroe kena dpt utk levelup
 
 	// other action variables
-	private bool grounded, jumping;
+	private bool grounded, doubleJump;
 	private bool facingLeft;
 	private bool canAttack;
 	private bool lvlUP;
@@ -37,10 +37,10 @@ public class Player : MonoBehaviour {
 
 		// other flag status
 		grounded = false;
-		jumping = false;
 		facingLeft = true;
 		canAttack = true;
 		lvlUP = false;
+		doubleJump = false;
 
 		// other object status
 		enemy = GameObject.FindGameObjectWithTag ("Enemy").GetComponent<Collider2D> ();
@@ -63,18 +63,21 @@ public class Player : MonoBehaviour {
 			flip ();
 
 		// move player
-		GetComponent<Rigidbody2D> ().velocity = new Vector2 ((movement * speed), 0);
+		transform.position += new Vector3 ((movement * speed), 0, 0);
 		/* -------------------------- # ------------------------------ */
 
 		/* ------------------------ jump ----------------------------- */
 		groundChecker.position = new Vector3 (transform.position.x, groundChecker.position.y, 0);
 		grounded = Physics2D.OverlapCircle (groundChecker.position, .02f, targetGround);
 
-		if (Input.GetKeyDown (KeyCode.Space) && grounded) {
+		if (grounded)
+			doubleJump = false;
+
+		if (Input.GetKeyDown (KeyCode.Space) && (grounded || !doubleJump)) {
 			GetComponent<Rigidbody2D> ().AddForce (new Vector2 (0, jumpForce));
-			jumping = true;
-		} else {
-			jumping = false;
+
+			if(!doubleJump && !grounded)
+				doubleJump = true;
 		}
 		/* ------------------------- # --------------------------- */
 
@@ -113,8 +116,8 @@ public class Player : MonoBehaviour {
 		/* ---------------------- update animator ------------------- */
 		GetComponent<Animator> ().SetFloat ("movement", Mathf.Abs(movement));
 		GetComponent<Animator> ().SetBool ("grounded", grounded);
-		GetComponent<Animator> ().SetBool ("jumping", jumping);
 		GetComponent<Animator> ().SetBool ("attack", attacking);
+		GetComponent<Animator> ().SetFloat ("vSpeed", GetComponent<Rigidbody2D> ().velocity.y);
 		/* --------------------------- # --------------------------------- */
 	}
 

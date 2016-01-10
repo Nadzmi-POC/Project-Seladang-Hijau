@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{B6C5B4F0-5BD5-35B8-F87B-61A7CED49055}</ProjectGuid>
+	<ProjectGuid>{57D754E4-39CF-E0B7-6651-4184481498F9}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -49,7 +49,7 @@
      <Compile Include="Assets\Camera\Script\FollowPlayer.cs" />
      <Compile Include="Assets\Enemy\Script\Enemy.cs" />
      <Compile Include="Assets\Player\Script\Player.cs" />
-     <Compile Include="Assets\Time.cs" />
+     <Compile Include="Assets\Time\Time.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
