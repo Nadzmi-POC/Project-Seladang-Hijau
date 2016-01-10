@@ -1,0 +1,122 @@
+fileFormatVersion: 2
+guid: 6f25a6fe136721744aa29427f8de3898
+timeCreated: 1451921844
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    0: tail
+    21300000: tail
+    21300002: hand_r
+    21300004: hand_l
+    21300006: head
+    21300008: leg_r
+    21300010: leg_l
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: tail
+      rect:
+        serializedVersion: 2
+        x: 425
+        y: 1941
+        width: 385
+        height: 262
+      alignment: 9
+      pivot: {x: .123916186, y: .440483719}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: hand_r
+      rect:
+        serializedVersion: 2
+        x: 1743
+        y: 1830
+        width: 283
+        height: 584
+      alignment: 9
+      pivot: {x: .187452555, y: .0692928806}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: hand_l
+      rect:
+        serializedVersion: 2
+        x: 2710
+        y: 1772
+        width: 551
+        height: 602
+      alignment: 9
+      pivot: {x: .108995274, y: .100181401}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 187
+        width: 987
+        height: 987
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: leg_r
+      rect:
+        serializedVersion: 2
+        x: 1821
+        y: 194
+        width: 413
+        height: 539
+      alignment: 9
+      pivot: {x: .204016149, y: .921186507}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: leg_l
+      rect:
+        serializedVersion: 2
+        x: 2708
+        y: 94
+        width: 668
+        height: 703
+      alignment: 9
+      pivot: {x: .0966621414, y: .883257031}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
