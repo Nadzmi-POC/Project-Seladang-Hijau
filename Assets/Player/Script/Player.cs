@@ -3,52 +3,52 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class Player : MonoBehaviour {
-	// other components
+	// player's attribute
+	PlayerScore playerScore;
+	PlayerAttack playerAttack;
+	PlayerEnergy playerEnergy;
+	PlayerLevel playerLevel;
+
+	// enemy's attribute
+	EnemyScore enemyScore;
+
+	// player's other components
 	public LayerMask targetGround;
 	public Transform groundChecker;
 	public Collider2D attack;
 	public Text energyGUI, scoreGUI, lvlGUI;
 
-	public float speed, jumpForce; // player info var (public)
-	
-	// player info variables
-	private float en, maxEn, enPercent;
-	private int atk;
-	private int score, lvl, lvlScore; // lvlScore = scroe kena dpt utk levelup
+	public float speed, jumpForce; // player characteristic var (public)
 
-	// other action variables
+	// action variables
 	private bool grounded, doubleJump;
 	private bool facingLeft;
-	private bool canAttack;
-	private bool lvlUP;
 
 	// other object variables
-	private Collider2D enemy;
+	private GameObject enemy;
 
 	void Start () {
-		// player basic info :
-		atk = 1;
-		score = 0;
-		lvl = 1;
-		lvlScore = 10;
-		en = 100;
-		maxEn = 100;
-		enPercent = (en / maxEn) * 100;
+		// intialize player's attribute
+		playerScore = GetComponent<PlayerScore> ();
+		playerAttack = GetComponent<PlayerAttack> ();
+		playerEnergy = GetComponent<PlayerEnergy> ();
+		playerLevel = GetComponent<PlayerLevel> ();
+
+		// initialize enemy's attribute
+		enemy = GameObject.FindGameObjectWithTag("Enemy");
+		enemyScore = enemy.GetComponent<EnemyScore>();
 
 		// other flag status
 		grounded = false;
 		facingLeft = true;
-		canAttack = true;
-		lvlUP = false;
 		doubleJump = false;
 
 		// other object status
-		enemy = GameObject.FindGameObjectWithTag ("Enemy").GetComponent<Collider2D> ();
+		enemy = GameObject.FindGameObjectWithTag ("Enemy");
 	}
 
 	void FixedUpdate () {
 		action ();
-		checkLvlUp ();
 		guiUpdate ();
 	}
 
@@ -84,33 +84,24 @@ public class Player : MonoBehaviour {
 		/* ----------------------- attack ------------------------------ */
 		bool attacking = false;
 
-		if (canAttack) {
+		if (playerAttack.getCanAttack()) {
 			if(Input.GetKeyDown (KeyCode.Z)) {
 				attacking = true;
-				en -= 20; // if the player attempt to attack, their energy will be decreased by 20
+				playerEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
 				
-				if (attack.IsTouching(enemy)) { // if the attack attempt successful, their score will be increased by atk
-					score += atk;
+				if (attack.IsTouching(enemy.GetComponent<Collider2D> ())) { // attack attempt successful, score will be increased by player atk
+					playerScore.increaseScore();
+					enemyScore.setScore (enemyScore.getScore () - playerAttack.getAtk ());
 				}
 
-				if (en < 20) 
-					canAttack = false;
+				if (playerEnergy.getEnergy () < 20) {
+					playerAttack.setCanAttack (false);
+					playerEnergy.setExhausted (true);
+				}
 			}
 		} else {
-			en += 0.25f;
-
-			if (enPercent < 100) 
-				canAttack = false;
-			else
-				canAttack = true;
+			playerEnergy.isExhausted ();
 		}
-
-		en++;
-		if (en >= maxEn)
-			en = maxEn;
-		if(en <= 0)
-			en = 0;
-		enPercent = (en / maxEn) * 100;
 		/* ---------------------- # ----------------------------- */
 
 		/* ---------------------- update animator ------------------- */
@@ -121,47 +112,11 @@ public class Player : MonoBehaviour {
 		/* --------------------------- # --------------------------------- */
 	}
 
-	void checkLvlUp() { // check if player has leveled up or not
-		/*
-		 * if the score >= the score required to level up(lvlScore), the player will level up.
-		 * the lvlScore will be multiplied by 3
-		 */
-		if (score >= lvlScore) {
-			lvlUP = true;
-			lvlScore *= 3;
-			lvl++;
-
-			switch (lvl) { // increase certain stat based on the level that the player has increased
-			case 1:
-				atk = 1;
-				maxEn += 20;
-				break;
-			case 2:
-				atk = 2;
-				maxEn += 20;
-				break;
-			case 3:
-				atk = 3;
-				maxEn += 20;
-				break;
-			case 4:
-				atk = 4;
-				maxEn += 20;
-				break;
-			case 5:
-				atk = 5;
-				maxEn += 20;
-				break;
-			}
-		} else
-			lvlUP = false;
-	}
-
 	/* -------------------- GUI update ------------------------- */
 	void guiUpdate() { // update the ui
-		energyGUI.text = "ENERGY: " + enPercent.ToString ("F0") + "%";
-		scoreGUI.text = "SCORE: " + score.ToString ();
-		lvlGUI.text = "LEVEL: " + lvl.ToString ();
+		energyGUI.text = "ENERGY: " + playerEnergy.getEnergyPercent().ToString ("F0") + "%";
+		scoreGUI.text = "SCORE: " + playerScore.getScore().ToString ();
+		lvlGUI.text = "LEVEL: " + playerLevel.getLevel().ToString ();
 	}
 	/* -------------------------- # --------------------------- */
 
