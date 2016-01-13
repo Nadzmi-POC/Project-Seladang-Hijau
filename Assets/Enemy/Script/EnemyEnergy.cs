@@ -5,16 +5,6 @@ using System.Collections;
 public class EnemyEnergy : MonoBehaviour {
 	// energy attribute
 	public float energy, maxEnergy, energyPercent;
-	public bool exhausted;
-	public Text energyGUI;
-
-	// other required script
-	private EnemyAttack enemyAttack;
-
-	// initialize energy attribute
-	void Awake() {
-		enemyAttack = GetComponent<EnemyAttack> ();
-	}
 
 	// update energy percentage value
 	void FixedUpdate() {
@@ -23,7 +13,8 @@ public class EnemyEnergy : MonoBehaviour {
 		energyPercent = (energy / maxEnergy) * 100;
 	}
 
-	public void isExhausted() { // is currently exhausted
+	// other methods
+	public void isExhausted(EnemyAttack enemyAttack, Text energyGUI) { // is currently exhausted
 		energy += 0.25f;
 
 		if (energyPercent < 100) {
@@ -49,10 +40,8 @@ public class EnemyEnergy : MonoBehaviour {
 	// setter & getter
 	public void setEnergy(float amount) { energy = amount; }
 	public void setMaxEnergy(float amount) { maxEnergy = amount; }
-	public void setExhausted(bool tof) { exhausted = tof; }
 
 	public float getEnergy() { return energy; }
 	public float getMaxEnergy() { return maxEnergy; }
 	public float getEnergyPercent() { return energyPercent; }
-	public bool getExhausted() { return exhausted; }
 }

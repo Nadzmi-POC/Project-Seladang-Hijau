@@ -4,15 +4,16 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour {
 	// enemy's attribute
+	EnemyScore enemyScore;
 	EnemyAttack enemyAttack;
 	EnemyEnergy enemyEnergy;
 	EnemyLevel enemyLevel;
-	EnemyScore enemyScore;
 
 	// player's attribute
+	GameObject player;
 	PlayerScore playerScore;
 
-	// other components
+	// enemy's other components
 	public LayerMask targetGround;
 	public Transform groundChecker;
 	public Collider2D attack;
@@ -21,39 +22,45 @@ public class Enemy : MonoBehaviour {
 	public float speed, jumpForce; // player characteristic var (public)
 
 	// action variables
-	private bool grounded, doubleJump;
 	private bool facingLeft;
 
-	// player's object
-	GameObject player;
-
-	void Start() {
+	void Awake() {
 		// intialize player's attribute
 		enemyScore = GetComponent<EnemyScore> ();
 		enemyAttack = GetComponent<EnemyAttack> ();
 		enemyEnergy = GetComponent<EnemyEnergy> ();
 		enemyLevel = GetComponent<EnemyLevel> ();
+	}
 
+	void Start () {
 		// other flag status
-		grounded = false;
 		facingLeft = true;
-		doubleJump = false;
 
-		// player's object initialization
+		// initialize player's attributes
 		player = GameObject.FindGameObjectWithTag("Player");
 		playerScore = player.GetComponent<PlayerScore> ();
 	}
 
-	void FixedUpdate() {
+	void Update() { // logic update
+		enemyLevel.checkLevelUP (enemyScore, enemyEnergy, enemyAttack);
+	}
+
+	void FixedUpdate () { // physic update
 		action ();
 		guiUpdate ();
 	}
 
-	void action() {
+	void action() { // action function
 		/* ------------------------ Movement ---------------------------- */
+		float distance = Vector2.Distance (transform.position, player.transform.position);
+
+		if(distance >= 100)
+			transform.position = Vector2.MoveTowards (transform.position, player.transform.position, speed);
 		/* -------------------------- # ------------------------------ */
 
 		/* ------------------------ jump ----------------------------- */
+		if(groundChecker.GetComponent<BoxCollider2D>().IsTouching(GameObject.FindGameObjectWithTag("JumpBase").GetComponent<Collider2D> ()))
+			GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce);
 		/* ------------------------- # --------------------------- */
 
 		/* ----------------------- attack ------------------------------ */
@@ -72,7 +79,7 @@ public class Enemy : MonoBehaviour {
 	/* -------------------------- # --------------------------- */
 
 	/* -------------------- Other methods ---------------------- */
-	void flip() { // flip the player's sprite to left or right
+	void flip() { // flip the enemy's sprite to left or right
 		facingLeft = !facingLeft;
 
 		Vector3 theScale = transform.localScale;

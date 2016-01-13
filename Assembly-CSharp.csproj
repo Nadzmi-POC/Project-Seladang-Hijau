@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Camera\Script\FollowPlayer.cs" />
-     <Compile Include="Assets\Enemy\Script\Attacking.cs" />
      <Compile Include="Assets\Enemy\Script\Enemy.cs" />
      <Compile Include="Assets\Enemy\Script\EnemyAttack.cs" />
      <Compile Include="Assets\Enemy\Script\EnemyEnergy.cs" />
