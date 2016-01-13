@@ -5,26 +5,13 @@ public class EnemyLevel : MonoBehaviour {
 	// level attributes
 	public int level, scoreLevel;
 
-	// other reqiured scripts
-	private EnemyAttack enemyAttack;
-	private EnemyEnergy enemyEnergy;
-	private EnemyScore enemyScore;
-
-	// initialize level attribute
-	void Awake() {
-		enemyAttack = GetComponent<EnemyAttack> ();
-		enemyEnergy = GetComponent<EnemyEnergy> ();
-		enemyScore = GetComponent<EnemyScore> ();
-	}
-
-	// update current level
-	void Update() {
+	// other methods
+	public void checkLevelUP(EnemyScore enemyScore, EnemyEnergy enemyEnergy, EnemyAttack enemyAttack) {
 		if (enemyScore.getScore () >= scoreLevel) // check if the player can level up or not
-			levelUP ();
+			levelUP (enemyEnergy, enemyAttack);
 	}
 
-	// level up
-	public void levelUP() {
+	public void levelUP(EnemyEnergy enemyEnergy, EnemyAttack enemyAttack) { // level up
 		/*
 		 * if the score >= the score required to level up(lvlScore), the player will level up.
 		 * the lvlScore will be multiplied by 3

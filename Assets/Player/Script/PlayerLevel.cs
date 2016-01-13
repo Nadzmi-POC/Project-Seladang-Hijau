@@ -3,28 +3,20 @@ using System.Collections;
 
 public class PlayerLevel : MonoBehaviour {
 	// level attributes
-	public int level, scoreLevel;
+	private int level, scoreLevel;
 
-	// other reqiured scripts
-	private PlayerAttack playerAttack;
-	private PlayerEnergy playerEnergy;
-	private PlayerScore playerScore;
-
-	// initialize level attribute
 	void Awake() {
-		playerAttack = GetComponent<PlayerAttack> ();
-		playerEnergy = GetComponent<PlayerEnergy> ();
-		playerScore = GetComponent<PlayerScore> ();
-	}
-
-	// update current level
-	void Update() {
-		if (playerScore.getScore () >= scoreLevel) // check if the player can level up or not
-			levelUP ();
+		level = 1;
+		scoreLevel = 10;
 	}
 
 	// other methods
-	public void levelUP() { // level up
+	public void checkLevelUP(PlayerScore playerScore, PlayerEnergy playerEnergy, PlayerAttack playerAttack) {
+		if (playerScore.getScore () >= scoreLevel) // check if the player can level up or not
+			levelUP (playerEnergy, playerAttack);
+	}
+
+	public void levelUP(PlayerEnergy playerEnergy, PlayerAttack playerAttack) { // level up
 		/*
 		 * if the score >= the score required to level up(lvlScore), the player will level up.
 		 * the lvlScore will be multiplied by 3

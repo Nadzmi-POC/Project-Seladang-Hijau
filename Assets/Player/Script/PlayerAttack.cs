@@ -8,6 +8,7 @@ public class PlayerAttack : MonoBehaviour {
 
 	// initialize attack attribute
 	void Awake() {
+		atk = 1;
 		canAttack = true;
 	}
 

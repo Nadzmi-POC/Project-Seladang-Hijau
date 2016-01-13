@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
 	PlayerLevel playerLevel;
 
 	// enemy's attribute
+	GameObject enemy;
 	EnemyScore enemyScore;
 
 	// player's other components
@@ -24,30 +25,30 @@ public class Player : MonoBehaviour {
 	private bool grounded, doubleJump;
 	private bool facingLeft;
 
-	// other object variables
-	private GameObject enemy;
-
-	void Start () {
+	void Awake() {
 		// intialize player's attribute
 		playerScore = GetComponent<PlayerScore> ();
 		playerAttack = GetComponent<PlayerAttack> ();
 		playerEnergy = GetComponent<PlayerEnergy> ();
 		playerLevel = GetComponent<PlayerLevel> ();
+	}
 
-		// initialize enemy's attribute
-		enemy = GameObject.FindGameObjectWithTag("Enemy");
-		enemyScore = enemy.GetComponent<EnemyScore>();
-
+	void Start () {
 		// other flag status
 		grounded = false;
 		facingLeft = true;
 		doubleJump = false;
 
-		// other object status
-		enemy = GameObject.FindGameObjectWithTag ("Enemy");
+		// initialize enemy's attribute
+		enemy = GameObject.FindGameObjectWithTag("Enemy");
+		enemyScore = enemy.GetComponent<EnemyScore> ();
 	}
 
-	void FixedUpdate () {
+	void Update() { // logic update
+		playerLevel.checkLevelUP (playerScore, playerEnergy, playerAttack);
+	}
+
+	void FixedUpdate () { // physic update
 		action ();
 		guiUpdate ();
 	}
@@ -73,8 +74,8 @@ public class Player : MonoBehaviour {
 		if (grounded)
 			doubleJump = false;
 
-		if (Input.GetKeyDown (KeyCode.Space) && (grounded || !doubleJump)) {
-			GetComponent<Rigidbody2D> ().AddForce (new Vector2 (0, jumpForce));
+		if (Input.GetKeyDown (KeyCode.X) && (grounded || !doubleJump)) {
+			GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce);
 
 			if(!doubleJump && !grounded)
 				doubleJump = true;
@@ -90,17 +91,15 @@ public class Player : MonoBehaviour {
 				playerEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
 				
 				if (attack.IsTouching(enemy.GetComponent<Collider2D> ())) { // attack attempt successful, score will be increased by player atk
-					playerScore.increaseScore();
-					enemyScore.setScore (enemyScore.getScore () - playerAttack.getAtk ());
+					playerScore.increaseScore(playerAttack.getAtk ());
+					enemyScore.decreaseScore (playerAttack.getAtk ());
 				}
 
-				if (playerEnergy.getEnergy () < 20) {
+				if (playerEnergy.getEnergy () < 20)
 					playerAttack.setCanAttack (false);
-					playerEnergy.setExhausted (true);
-				}
 			}
 		} else {
-			playerEnergy.isExhausted ();
+			playerEnergy.isExhausted (playerAttack, energyGUI);
 		}
 		/* ---------------------- # ----------------------------- */
 

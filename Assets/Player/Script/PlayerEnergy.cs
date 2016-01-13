@@ -4,16 +4,12 @@ using System.Collections;
 
 public class PlayerEnergy : MonoBehaviour {
 	// energy attribute
-	public float energy, maxEnergy, energyPercent;
-	public bool exhausted;
-	public Text energyGUI;
+	private float energy, maxEnergy, energyPercent;
 
-	// other required script
-	private PlayerAttack playerAttack;
-
-	// initialize energy attribute
 	void Awake() {
-		playerAttack = GetComponent<PlayerAttack> ();
+		energy = 100;
+		maxEnergy = 100;
+		energyPercent = 100;
 	}
 
 	// update energy percentage value
@@ -24,7 +20,7 @@ public class PlayerEnergy : MonoBehaviour {
 	}
 
 	// other methods
-	public void isExhausted() { // is currently exhausted
+	public void isExhausted(PlayerAttack playerAttack, Text energyGUI) { // is currently exhausted
 		energy += 0.25f;
 
 		if (energyPercent < 100) {
@@ -50,10 +46,8 @@ public class PlayerEnergy : MonoBehaviour {
 	// setter & getter
 	public void setEnergy(float amount) { energy = amount; }
 	public void setMaxEnergy(float amount) { maxEnergy = amount; }
-	public void setExhausted(bool tof) { exhausted = tof; }
 
 	public float getEnergy() { return energy; }
 	public float getMaxEnergy() { return maxEnergy; }
 	public float getEnergyPercent() { return energyPercent; }
-	public bool getExhausted() { return exhausted; }
 }
