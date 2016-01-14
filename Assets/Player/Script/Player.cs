@@ -94,9 +94,8 @@ public class Player : MonoBehaviour {
 				if (playerEnergy.getEnergy () < 20)
 					playerAttack.setCanAttack (false);
 			}
-		} else {
+		} else
 			playerEnergy.isExhausted (playerAttack, energyGUI);
-		}
 		/* ---------------------- # ----------------------------- */
 
 		/* ---------------------- update animator ------------------- */

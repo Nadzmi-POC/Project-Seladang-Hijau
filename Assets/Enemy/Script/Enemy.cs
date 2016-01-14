@@ -54,6 +54,11 @@ public class Enemy : MonoBehaviour {
 		/* ------------------------ Movement ---------------------------- */
 		float direction = transform.position.x - player.transform.position.x;
 
+		if (direction < 0 && facingLeft)
+			flip ();
+		else if (direction > 0 && !facingLeft)
+			flip ();
+
 		if(distance >= 100)
 			transform.position = Vector2.MoveTowards (transform.position, player.transform.position, (speed / 10));
 		else if(distance < 100)
@@ -68,9 +73,27 @@ public class Enemy : MonoBehaviour {
 		/* ------------------------- # --------------------------- */
 
 		/* ----------------------- attack ------------------------------ */
+		/*
+		bool attacking = false;
+
+		if (enemyAttack.getCanAttack()) {
+			if(Input.GetKeyDown (KeyCode.Z)) {
+				attacking = true;
+				enemyEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
+
+				if (attack.IsTouching(player.GetComponent<Collider2D> ())) // attack attempt successful, score will be increased by player atk
+					enemyScore.increaseScore(enemyAttack.getAtk ());
+
+				if (enemyEnergy.getEnergy () < 20)
+					enemyAttack.setCanAttack (false);
+			}
+		} else
+			enemyEnergy.isExhausted (enemyAttack, energyGUI);
+			*/
 		/* ---------------------- # ----------------------------- */
 
 		/* ---------------------- update animator ------------------- */
+		// GetComponent<Animator>().SetBool("attack", attacking);
 		/* --------------------------- # --------------------------------- */
 	}
 

@@ -19,8 +19,8 @@ public class EnemyScore : MonoBehaviour {
 			score = 0;
 	}
 
-	public void increaseScore(EnemyAttack enemyattack) {
-		score += enemyattack.getAtk ();
+	public void increaseScore(int amount) {
+		score += amount;
 	}
 
 	public void decreaseScore(int amount) {
