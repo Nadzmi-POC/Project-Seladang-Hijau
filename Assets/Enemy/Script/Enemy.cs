@@ -65,22 +65,28 @@ public class Enemy : MonoBehaviour {
 			flip ();
 
 		if(distance >= 100) // distance >= 100, enemy will start looking for player by decreasing it's speed
-			transform.position = Vector2.MoveTowards (transform.position, new Vector2(player.transform.position.x, transform.position.y), (speed / 10));
+			transform.position = Vector2.MoveTowards (transform.position, new Vector2(player.transform.position.x, transform.position.y), (speed / 2));
 		else if(distance < 100) // distance < 100, enemy will chase player within it's sight
 			transform.position = Vector2.MoveTowards (transform.position, new Vector2(player.transform.position.x, transform.position.y), speed);
 		/* -------------------------- # ------------------------------ */
 
 		/* ------------------------ jump ----------------------------- */
+		/*
+		 * enemy will jump when near player and player is above him
+		 * enemy will double jump if's it's current jumping do not reach the player
+		 */
+		// calculate distance between enemy and player in terms of y-axis
 		float distanceY = Mathf.Abs(transform.position.y - player.transform.position.y);
+		float distanceX = Mathf.Abs (transform.position.x - player.transform.position.x);
 
 		groundChecker.position = new Vector3 (transform.position.x, groundChecker.position.y, 0); // update grounchecker's position
 		grounded = Physics2D.OverlapCircle (groundChecker.position, .02f, targetGround); // check if the groundchecker overlap the ground
 
-		if (distance < 50) {
-			if (distanceY > 30) {
-				if (grounded || doubleJump) {
-					GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce);
-					doubleJump = !doubleJump;
+		if (distanceX < 100) { // if enemy is near player
+			if (distanceY > 20) { // if the player is above enemy
+				if (grounded || doubleJump) { // if enemy is currently grounded or can doublejump
+					GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce); // enemy will jump or double jump
+					doubleJump = !doubleJump; // change the status of doubleJump
 				}
 			}
 		}
