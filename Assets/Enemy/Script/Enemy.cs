@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour {
 	private bool facingLeft;
 
 	void Awake() {
-		// intialize player's attribute
+		// intialize enemy's attribute
 		enemyScore = GetComponent<EnemyScore> ();
 		enemyAttack = GetComponent<EnemyAttack> ();
 		enemyEnergy = GetComponent<EnemyEnergy> ();
@@ -33,14 +33,14 @@ public class Enemy : MonoBehaviour {
 
 	void Start () {
 		// other flag status
-		facingLeft = true;
+		facingLeft = true; // enemy start in the scene facing left
 
 		// initialize player's attributes
-		player = GameObject.FindGameObjectWithTag("Player");
+		player = GameObject.FindGameObjectWithTag("Player"); // find player's gamobject in the scene
 	}
 
 	void Update() { // logic update
-		enemyLevel.checkLevelUP (enemyScore, enemyEnergy, enemyAttack);
+		enemyLevel.checkLevelUP (enemyScore, enemyEnergy, enemyAttack); // check whether the enemy is eligible to level up
 	}
 
 	void FixedUpdate () { // physic update
@@ -49,51 +49,50 @@ public class Enemy : MonoBehaviour {
 	}
 
 	void action() { // action function
-		float distance = Vector2.Distance (transform.position, player.transform.position);
+		float distance = Vector2.Distance (transform.position, player.transform.position); // calculate distance between enemy and player
 
 		/* ------------------------ Movement ---------------------------- */
-		float direction = transform.position.x - player.transform.position.x;
+		float direction = transform.position.x - player.transform.position.x; // calculate the direction of player
 
+		// if direction is (-ve), the enemy will flip to face the player and vice versa
 		if (direction < 0 && facingLeft)
 			flip ();
 		else if (direction > 0 && !facingLeft)
 			flip ();
 
-		if(distance >= 100)
+		if(distance >= 100) // distance >= 100, enemy will start looking for player by decreasing it's speed
 			transform.position = Vector2.MoveTowards (transform.position, player.transform.position, (speed / 10));
-		else if(distance < 100)
+		else if(distance < 100) // distance < 100, enemy will chase player within it's sight
 			transform.position = Vector2.MoveTowards (transform.position, player.transform.position, speed);
 		/* -------------------------- # ------------------------------ */
 
 		/* ------------------------ jump ----------------------------- */
-		if (GameObject.FindGameObjectWithTag ("JumpBase") != null) {
+		if (GameObject.FindGameObjectWithTag ("JumpBase") != null) { // search for JumpBase in the scene (if any)
 			if (groundChecker.GetComponent<BoxCollider2D> ().IsTouching (GameObject.FindGameObjectWithTag ("JumpBase").GetComponent<Collider2D> ()))
-				GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce);
+				GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce); // enemy jump when it hit the Jumpbase
 		}
 		/* ------------------------- # --------------------------- */
 
 		/* ----------------------- attack ------------------------------ */
-		/*
 		bool attacking = false;
 
-		if (enemyAttack.getCanAttack()) {
-			if(Input.GetKeyDown (KeyCode.Z)) {
-				attacking = true;
-				enemyEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
+		if (distance <= 50) { // if enemy is near player, enemy will start to attack player
+			if (enemyAttack.getCanAttack()) { // check if enemy are able to attack
+				attacking = true; // enemy will attack
+				enemyEnergy.energyDecrease (20); // enemy attempt to attack, energy will be decreased by 20
 
-				if (attack.IsTouching(player.GetComponent<Collider2D> ())) // attack attempt successful, score will be increased by player atk
-					enemyScore.increaseScore(enemyAttack.getAtk ());
+				if (attack.IsTouching(player.GetComponent<Collider2D> ())) // attack attempt successful, score will be increased by enemy atk
+					enemyScore.increaseScore(enemyAttack.getAtk ()); // increase enemy score by enemy' atk value
 
-				if (enemyEnergy.getEnergy () < 20)
+				if (enemyEnergy.getEnergy () < 20) // if the last attack reduce the energy below the capcity
 					enemyAttack.setCanAttack (false);
-			}
-		} else
-			enemyEnergy.isExhausted (enemyAttack, energyGUI);
-			*/
+			} else
+				enemyEnergy.isExhausted (enemyAttack, energyGUI); // enemy exhausted, cannot attack until energy is replinished
+		}
 		/* ---------------------- # ----------------------------- */
 
 		/* ---------------------- update animator ------------------- */
-		// GetComponent<Animator>().SetBool("attack", attacking);
+		GetComponent<Animator>().SetBool("attack", attacking);
 		/* --------------------------- # --------------------------------- */
 	}
 

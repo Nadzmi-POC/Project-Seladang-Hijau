@@ -39,11 +39,11 @@ public class Player : MonoBehaviour {
 		doubleJump = false;
 
 		// initialize enemy's attribute
-		enemy = GameObject.FindGameObjectWithTag("Enemy");
+		enemy = GameObject.FindGameObjectWithTag("Enemy"); // find enemy gameobject int the scene
 	}
 
 	void Update() { // logic update
-		playerLevel.checkLevelUP (playerScore, playerEnergy, playerAttack);
+		playerLevel.checkLevelUP (playerScore, playerEnergy, playerAttack); // check whether player are eligible for level up
 	}
 
 	void FixedUpdate () { // physic update
@@ -53,7 +53,7 @@ public class Player : MonoBehaviour {
 
 	void action() { // action function
 		/* ------------------------ Movement ---------------------------- */
-		float movement = Input.GetAxis ("Horizontal");
+		float movement = Input.GetAxis ("Horizontal"); // get input axis from player
 
 		// flip the sprite to facing left or right
 		if (movement > 0 && facingLeft)
@@ -61,21 +61,21 @@ public class Player : MonoBehaviour {
 		else if (movement < 0 && !facingLeft)
 			flip ();
 
-		// move player
+		// move player according to the input axis
 		transform.position += new Vector3 ((movement * speed), 0, 0);
 		/* -------------------------- # ------------------------------ */
 
 		/* ------------------------ jump ----------------------------- */
-		groundChecker.position = new Vector3 (transform.position.x, groundChecker.position.y, 0);
-		grounded = Physics2D.OverlapCircle (groundChecker.position, .02f, targetGround);
+		groundChecker.position = new Vector3 (transform.position.x, groundChecker.position.y, 0); // update grounchecker's position
+		grounded = Physics2D.OverlapCircle (groundChecker.position, .02f, targetGround); // check if the groundchecker overlap the ground
 
-		if (grounded)
+		if (grounded) // player currently grounded, player cannot double jump
 			doubleJump = false;
 
 		if (Input.GetKeyDown (KeyCode.Space) && (grounded || !doubleJump)) {
-			GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce);
+			GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce); // player can jump or double jump
 
-			if(!doubleJump && !grounded)
+			if(!doubleJump && !grounded) // player are not on the ground and not double jump yet, player can double jump
 				doubleJump = true;
 		}
 		/* ------------------------- # --------------------------- */
@@ -83,19 +83,19 @@ public class Player : MonoBehaviour {
 		/* ----------------------- attack ------------------------------ */
 		bool attacking = false;
 
-		if (playerAttack.getCanAttack()) {
-			if(Input.GetKeyDown (KeyCode.Z)) {
-				attacking = true;
+		if (playerAttack.getCanAttack()) { // check eligibility for the player to attack
+			if(Input.GetKeyDown (KeyCode.Z)) { // get player's input
+				attacking = true; // player will attack
 				playerEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
 				
 				if (attack.IsTouching(enemy.GetComponent<Collider2D> ())) // attack attempt successful, score will be increased by player atk
 					playerScore.increaseScore(playerAttack.getAtk ());
 
-				if (playerEnergy.getEnergy () < 20)
+				if (playerEnergy.getEnergy () < 20) // if player's energy below the capacity, player cannot attack
 					playerAttack.setCanAttack (false);
 			}
 		} else
-			playerEnergy.isExhausted (playerAttack, energyGUI);
+			playerEnergy.isExhausted (playerAttack, energyGUI); // player is exhausted, wait until energy is 100% replinished to attack again
 		/* ---------------------- # ----------------------------- */
 
 		/* ---------------------- update animator ------------------- */
