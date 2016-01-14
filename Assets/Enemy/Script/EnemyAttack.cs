@@ -3,11 +3,12 @@ using System.Collections;
 
 public class EnemyAttack : MonoBehaviour {
 	// attack attribute
-	public int atk;
-	public bool canAttack;
+	private int atk;
+	private bool canAttack;
 
 	// initialize attack attribute
 	void Awake() {
+		atk = 1;
 		canAttack = true;
 	}
 

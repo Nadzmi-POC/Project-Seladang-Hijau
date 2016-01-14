@@ -3,7 +3,12 @@ using System.Collections;
 
 public class EnemyLevel : MonoBehaviour {
 	// level attributes
-	public int level, scoreLevel;
+	private int level, scoreLevel;
+
+	void Awake() {
+		level = 1;
+		scoreLevel = 10;
+	}
 
 	// other methods
 	public void checkLevelUP(EnemyScore enemyScore, EnemyEnergy enemyEnergy, EnemyAttack enemyAttack) {

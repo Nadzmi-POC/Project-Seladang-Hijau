@@ -11,7 +11,6 @@ public class Player : MonoBehaviour {
 
 	// enemy's attribute
 	GameObject enemy;
-	EnemyScore enemyScore;
 
 	// player's other components
 	public LayerMask targetGround;
@@ -41,7 +40,6 @@ public class Player : MonoBehaviour {
 
 		// initialize enemy's attribute
 		enemy = GameObject.FindGameObjectWithTag("Enemy");
-		enemyScore = enemy.GetComponent<EnemyScore> ();
 	}
 
 	void Update() { // logic update
@@ -74,7 +72,7 @@ public class Player : MonoBehaviour {
 		if (grounded)
 			doubleJump = false;
 
-		if (Input.GetKeyDown (KeyCode.X) && (grounded || !doubleJump)) {
+		if (Input.GetKeyDown (KeyCode.Space) && (grounded || !doubleJump)) {
 			GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce);
 
 			if(!doubleJump && !grounded)
@@ -90,10 +88,8 @@ public class Player : MonoBehaviour {
 				attacking = true;
 				playerEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
 				
-				if (attack.IsTouching(enemy.GetComponent<Collider2D> ())) { // attack attempt successful, score will be increased by player atk
+				if (attack.IsTouching(enemy.GetComponent<Collider2D> ())) // attack attempt successful, score will be increased by player atk
 					playerScore.increaseScore(playerAttack.getAtk ());
-					enemyScore.decreaseScore (playerAttack.getAtk ());
-				}
 
 				if (playerEnergy.getEnergy () < 20)
 					playerAttack.setCanAttack (false);

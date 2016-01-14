@@ -3,8 +3,8 @@ using System.Collections;
 
 public class PlayerAttack : MonoBehaviour {
 	// attack attribute
-	public int atk;
-	public bool canAttack;
+	private int atk;
+	private bool canAttack;
 
 	// initialize attack attribute
 	void Awake() {

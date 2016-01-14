@@ -4,7 +4,13 @@ using System.Collections;
 
 public class EnemyEnergy : MonoBehaviour {
 	// energy attribute
-	public float energy, maxEnergy, energyPercent;
+	private float energy, maxEnergy, energyPercent;
+
+	void Awake() {
+		energy = 100;
+		maxEnergy = 100;
+		energyPercent = 100;
+	}
 
 	// update energy percentage value
 	void FixedUpdate() {

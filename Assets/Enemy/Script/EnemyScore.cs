@@ -3,7 +3,11 @@ using System.Collections;
 
 public class EnemyScore : MonoBehaviour {
 	// score attribute
-	public int score;
+	private int score;
+
+	void Awake() {
+		score = 0;
+	}
 
 	void Update() {
 		clampScore ();
