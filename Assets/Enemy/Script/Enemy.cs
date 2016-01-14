@@ -22,8 +22,6 @@ public class Enemy : MonoBehaviour {
 
 	// action variables
 	private bool facingLeft;
-	private bool grounded;
-	private bool doubleJump;
 
 	void Awake() {
 		// intialize enemy's attribute
@@ -36,8 +34,6 @@ public class Enemy : MonoBehaviour {
 	void Start () {
 		// other flag status
 		facingLeft = true; // enemy start in the scene facing left
-		grounded = false;
-		doubleJump = false;
 
 		// initialize player's attributes
 		player = GameObject.FindGameObjectWithTag("Player"); // find player's gamobject in the scene
@@ -65,24 +61,15 @@ public class Enemy : MonoBehaviour {
 			flip ();
 
 		if(distance >= 100) // distance >= 100, enemy will start looking for player by decreasing it's speed
-			transform.position = Vector2.MoveTowards (transform.position, new Vector2(player.transform.position.x, transform.position.y), (speed / 10));
+			transform.position = Vector2.MoveTowards (transform.position, player.transform.position, (speed / 10));
 		else if(distance < 100) // distance < 100, enemy will chase player within it's sight
-			transform.position = Vector2.MoveTowards (transform.position, new Vector2(player.transform.position.x, transform.position.y), speed);
+			transform.position = Vector2.MoveTowards (transform.position, player.transform.position, speed);
 		/* -------------------------- # ------------------------------ */
 
 		/* ------------------------ jump ----------------------------- */
-		float distanceY = Mathf.Abs(transform.position.y - player.transform.position.y);
-
-		groundChecker.position = new Vector3 (transform.position.x, groundChecker.position.y, 0); // update grounchecker's position
-		grounded = Physics2D.OverlapCircle (groundChecker.position, .02f, targetGround); // check if the groundchecker overlap the ground
-
-		if (distance < 50) {
-			if (distanceY > 30) {
-				if (grounded || doubleJump) {
-					GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce);
-					doubleJump = !doubleJump;
-				}
-			}
+		if (GameObject.FindGameObjectWithTag ("JumpBase") != null) { // search for JumpBase in the scene (if any)
+			if (groundChecker.GetComponent<BoxCollider2D> ().IsTouching (GameObject.FindGameObjectWithTag ("JumpBase").GetComponent<Collider2D> ()))
+				GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce); // enemy jump when it hit the Jumpbase
 		}
 		/* ------------------------- # --------------------------- */
 
@@ -104,12 +91,8 @@ public class Enemy : MonoBehaviour {
 		}
 		/* ---------------------- # ----------------------------- */
 
-		/* --------------------------- hit ------------------------------ */
-		/* -------------------------------------------------------------- */
-
 		/* ---------------------- update animator ------------------- */
 		GetComponent<Animator>().SetBool("attack", attacking);
-		GetComponent<Animator> ().SetBool ("grounded", grounded);
 		/* --------------------------- # --------------------------------- */
 	}
 

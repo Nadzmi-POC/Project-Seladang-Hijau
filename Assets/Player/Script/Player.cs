@@ -88,16 +88,8 @@ public class Player : MonoBehaviour {
 				attacking = true; // player will attack
 				playerEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
 				
-				if (attack.IsTouching (enemy.GetComponent<Collider2D> ())) { // attack attempt successful, score will be increased by player atk
-					playerScore.increaseScore (playerAttack.getAtk ());
-
-					if (Time.timeScale == 1.0f)
-						Time.timeScale = .5f;
-					else
-						Time.timeScale = 1.0f;
-
-					Time.fixedDeltaTime = .02f * Time.timeScale;
-				}
+				if (attack.IsTouching(enemy.GetComponent<Collider2D> ())) // attack attempt successful, score will be increased by player atk
+					playerScore.increaseScore(playerAttack.getAtk ());
 
 				if (playerEnergy.getEnergy () < 20) // if player's energy below the capacity, player cannot attack
 					playerAttack.setCanAttack (false);
