@@ -73,23 +73,21 @@ public class Enemy : MonoBehaviour {
 		/* ------------------------- # --------------------------- */
 
 		/* ----------------------- attack ------------------------------ */
-		/*
 		bool attacking = false;
 
-		if (enemyAttack.getCanAttack()) {
-			if(Input.GetKeyDown (KeyCode.Z)) {
+		if (distance <= 50) {
+			if (enemyAttack.getCanAttack()) {
 				attacking = true;
-				enemyEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
+				enemyEnergy.energyDecrease (20); // enemy attempt to attack, energy will be decreased by 20
 
-				if (attack.IsTouching(player.GetComponent<Collider2D> ())) // attack attempt successful, score will be increased by player atk
+				if (attack.IsTouching(player.GetComponent<Collider2D> ())) // enemy attempt successful, score will be increased by player atk
 					enemyScore.increaseScore(enemyAttack.getAtk ());
 
 				if (enemyEnergy.getEnergy () < 20)
 					enemyAttack.setCanAttack (false);
-			}
-		} else
-			enemyEnergy.isExhausted (enemyAttack, energyGUI);
-			*/
+			} else
+				enemyEnergy.isExhausted (enemyAttack, energyGUI);
+		}
 		/* ---------------------- # ----------------------------- */
 
 		/* ---------------------- update animator ------------------- */
