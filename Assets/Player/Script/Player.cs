@@ -11,6 +11,9 @@ public class Player : MonoBehaviour {
 
 	// enemy's attribute
 	GameObject enemy;
+	Enemy enemyAttribute;
+	EnemyScore enemyScore;
+	EnemyAttack enemyAttack;
 
 	// player's other components
 	public LayerMask targetGround;
@@ -21,8 +24,8 @@ public class Player : MonoBehaviour {
 	public float speed, jumpForce; // player characteristic var (public)
 
 	// action variables
-	private bool grounded, doubleJump;
 	private bool facingLeft;
+	private bool grounded, doubleJump;
 
 	void Awake() {
 		// intialize player's attribute
@@ -40,6 +43,9 @@ public class Player : MonoBehaviour {
 
 		// initialize enemy's attribute
 		enemy = GameObject.FindGameObjectWithTag("Enemy"); // find enemy gameobject int the scene
+		enemyAttribute = enemy.GetComponent<Enemy> ();
+		enemyScore = enemy.GetComponent<EnemyScore> ();
+		enemyAttack = enemy.GetComponent<EnemyAttack> ();
 	}
 
 	void Update() { // logic update
@@ -51,6 +57,22 @@ public class Player : MonoBehaviour {
 		guiUpdate ();
 	}
 
+	// trigger functions
+	/* --------------------------- hit ------------------------------ */
+	void OnTriggerEnter2D(Collider2D gameObject) { // trigger when enemy are being hit player's attacker
+		if ((gameObject.tag == "EnemyAttacker")) {
+			// player attack attempt successful, player score will be increased by player atk
+			enemyScore.increaseScore(enemyAttack.getAtk ());
+
+			if (enemyAttribute.getFacingLeft())
+				transform.Translate (Vector2.left * 30);
+			else
+				transform.Translate (Vector2.right * 30);
+		}
+	}
+	/* -------------------------------------------------------------- */
+
+	// basic functions
 	void action() { // action function
 		/* ------------------------ Movement ---------------------------- */
 		float movement = Input.GetAxis ("Horizontal"); // get input axis from player
@@ -87,17 +109,6 @@ public class Player : MonoBehaviour {
 			if(Input.GetKeyDown (KeyCode.Z)) { // get player's input
 				attacking = true; // player will attack
 				playerEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
-				
-				if (attack.IsTouching (enemy.GetComponent<Collider2D> ())) { // attack attempt successful, score will be increased by player atk
-					playerScore.increaseScore (playerAttack.getAtk ());
-
-					if (Time.timeScale == 1.0f)
-						Time.timeScale = .5f;
-					else
-						Time.timeScale = 1.0f;
-
-					Time.fixedDeltaTime = .02f * Time.timeScale;
-				}
 
 				if (playerEnergy.getEnergy () < 20) // if player's energy below the capacity, player cannot attack
 					playerAttack.setCanAttack (false);
@@ -130,5 +141,7 @@ public class Player : MonoBehaviour {
 		theScale.x *= -1;
 		transform.localScale = theScale;
 	}
+
+	public bool getFacingLeft() { return facingLeft; }
 	/* ------------------------- # -----------------------------*/
 }

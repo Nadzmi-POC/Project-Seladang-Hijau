@@ -2,8 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Enemy\Script\Enemy.cs">
     <Files>
-      <File FileName="Assets\Enemy\Script\Enemy.cs" Line="94" Column="71" />
-      <File FileName="Assets\Player\Script\Player.cs" Line="21" Column="2" />
+      <File FileName="Assets\Player\Script\Player.cs" Line="92" Column="5" />
+      <File FileName="Assets\Enemy\Script\Enemy.cs" Line="63" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
