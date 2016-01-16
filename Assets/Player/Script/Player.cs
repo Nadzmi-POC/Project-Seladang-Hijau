@@ -75,7 +75,7 @@ public class Player : MonoBehaviour {
 		/* ---------------------- out of ring --------------------------- */
 		// trigger when player are out of ring, will be transported back to the arena
 		if (gameObject.CompareTag ("OutRing"))
-			transform.position = new Vector3 (0, 0, 0);
+			transform.position = new Vector3 (0, 0, 0); // player will be transported at this location
 		/* -------------------------------------------------------------- */
 	}
 
