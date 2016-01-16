@@ -19,3 +19,11 @@
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+Library/assetDatabase3
+*.dwlt
+Library/expandedItems
+*.dwlt
+Library/metadata/00/00000000000000003000000000000000
+*.dll
+Library/ScriptAssemblies/Assembly-CSharp.dll
+Library/metadata/00/00000000000000002000000000000000
