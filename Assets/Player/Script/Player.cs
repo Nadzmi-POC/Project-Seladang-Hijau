@@ -58,9 +58,10 @@ public class Player : MonoBehaviour {
 	}
 
 	// trigger functions
-	/* --------------------------- hit ------------------------------ */
-	void OnTriggerEnter2D(Collider2D gameObject) { // trigger when enemy are being hit player's attacker
-		if ((gameObject.tag == "EnemyAttacker")) {
+	void OnTriggerEnter2D(Collider2D gameObject) {
+		/* --------------------------- hit ------------------------------ */
+		// trigger when enemy are being hit player's attacker
+		if (gameObject.CompareTag("EnemyAttacker")) {
 			// player attack attempt successful, player score will be increased by player atk
 			enemyScore.increaseScore(enemyAttack.getAtk ());
 
@@ -69,8 +70,14 @@ public class Player : MonoBehaviour {
 			else
 				transform.Translate (Vector2.right * 30);
 		}
+		/* -------------------------------------------------------------- */
+
+		/* ---------------------- out of ring --------------------------- */
+		// trigger when player are out of ring, will be transported back to the arena
+		if (gameObject.CompareTag ("OutRing"))
+			transform.position = new Vector3 (0, 0, 0);
+		/* -------------------------------------------------------------- */
 	}
-	/* -------------------------------------------------------------- */
 
 	// basic functions
 	void action() { // action function
