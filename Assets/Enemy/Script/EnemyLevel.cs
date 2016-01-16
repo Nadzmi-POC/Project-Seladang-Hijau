@@ -5,6 +5,7 @@ public class EnemyLevel : MonoBehaviour {
 	// level attributes
 	private int level, scoreLevel;
 
+	// update all level attribute
 	void Awake() {
 		level = 1;
 		scoreLevel = 10;

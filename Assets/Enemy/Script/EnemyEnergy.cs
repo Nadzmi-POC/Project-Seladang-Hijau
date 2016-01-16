@@ -6,6 +6,7 @@ public class EnemyEnergy : MonoBehaviour {
 	// energy attribute
 	private float energy, maxEnergy, energyPercent;
 
+	// initialize all attributes
 	void Awake() {
 		energy = 100;
 		maxEnergy = 100;
