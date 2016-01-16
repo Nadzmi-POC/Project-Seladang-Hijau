@@ -24,7 +24,7 @@ public class FollowPlayer : MonoBehaviour {
 		cam.orthographicSize = distance; // change camera size(or zoom) based on distance between player & enemy
 		if (cam.orthographicSize <= 80) // 80 <= cam size <= 150
 			cam.orthographicSize = 80;
-		else if (cam.orthographicSize >= 150)
-			cam.orthographicSize = 150;
+		else if (cam.orthographicSize >= 180)
+			cam.orthographicSize = 180;
 	}
 }
