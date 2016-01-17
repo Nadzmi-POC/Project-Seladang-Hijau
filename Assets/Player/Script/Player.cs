@@ -22,10 +22,13 @@ public class Player : MonoBehaviour {
 	public Text energyGUI, scoreGUI, lvlGUI;
 
 	public float speed, jumpForce; // player characteristic var (public)
+	public AudioClip attackSound;
 
 	// action variables
 	private bool facingLeft;
 	private bool grounded, doubleJump;
+
+	private AudioSource source;
 
 	void Awake() {
 		// intialize player's attribute
@@ -33,14 +36,16 @@ public class Player : MonoBehaviour {
 		playerAttack = GetComponent<PlayerAttack> ();
 		playerEnergy = GetComponent<PlayerEnergy> ();
 		playerLevel = GetComponent<PlayerLevel> ();
-	}
 
-	void Start () {
 		// other flag status
 		grounded = false;
 		facingLeft = true;
 		doubleJump = false;
 
+		source = GetComponent<AudioSource> ();
+	}
+
+	void Start () {
 		// initialize enemy's attribute
 		enemy = GameObject.FindGameObjectWithTag("Enemy"); // find enemy gameobject int the scene
 		enemyAttribute = enemy.GetComponent<Enemy> ();
@@ -60,11 +65,11 @@ public class Player : MonoBehaviour {
 	// trigger functions
 	/* --------------------------- hit ------------------------------ */
 	void OnTriggerEnter2D(Collider2D gameObject) { // trigger when enemy are being hit player's attacker
-		if ((gameObject.tag == "EnemyAttacker")) {
+		if (gameObject.CompareTag("EnemyAttacker")) {
 			// player attack attempt successful, player score will be increased by player atk
 			enemyScore.increaseScore(enemyAttack.getAtk ());
 
-			if (enemyAttribute.getFacingLeft())
+			if (enemyAttribute.getFacingLeft ())
 				transform.Translate (Vector2.left * 30);
 			else
 				transform.Translate (Vector2.right * 30);
@@ -109,6 +114,8 @@ public class Player : MonoBehaviour {
 			if(Input.GetKeyDown (KeyCode.Z)) { // get player's input
 				attacking = true; // player will attack
 				playerEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
+
+				source.PlayOneShot (attackSound);
 
 				if (playerEnergy.getEnergy () < 20) // if player's energy below the capacity, player cannot attack
 					playerAttack.setCanAttack (false);

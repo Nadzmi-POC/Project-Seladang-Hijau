@@ -22,11 +22,14 @@ public class Enemy : MonoBehaviour {
 	public Text energyGUI, scoreGUI, lvlGUI;
 
 	public float speed, jumpForce; // player characteristic var (public)
+	public AudioClip hitSound;
 
 	// action variables
 	private bool facingLeft;
 	private bool grounded;
 	private bool doubleJump;
+
+	private AudioSource source;
 
 	void Awake() {
 		// intialize enemy's attribute
@@ -34,14 +37,16 @@ public class Enemy : MonoBehaviour {
 		enemyAttack = GetComponent<EnemyAttack> ();
 		enemyEnergy = GetComponent<EnemyEnergy> ();
 		enemyLevel = GetComponent<EnemyLevel> ();
-	}
 
-	void Start () {
 		// other flag status
 		facingLeft = true; // enemy start in the scene facing left
 		grounded = false;
 		doubleJump = false;
 
+		source = GetComponent<AudioSource> ();
+	}
+
+	void Start () {
 		// initialize player's attributes
 		player = GameObject.FindGameObjectWithTag("Player"); // find player's gamobject in the scene
 		playerAttribute = player.GetComponent<Player> ();
@@ -61,9 +66,11 @@ public class Enemy : MonoBehaviour {
 	// trigger functions
 	/* --------------------------- hit ------------------------------ */
 	void OnTriggerEnter2D(Collider2D gameObject) { // trigger when enemy are being hit player's attacker
-		if ((gameObject.tag == "PlayerAttacker")) {
+		if (gameObject.CompareTag("PlayerAttacker")) {
 			// enemy attack attempt successful, enemy score will be increased by enemy atk
 			playerScore.increaseScore (playerAttack.getAtk ());
+
+			source.PlayOneShot (hitSound);
 
 			if (playerAttribute.getFacingLeft())
 				transform.Translate (Vector2.left * 30);
