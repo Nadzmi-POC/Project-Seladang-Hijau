@@ -110,18 +110,20 @@ public class Player : MonoBehaviour {
 		/* ----------------------- attack ------------------------------ */
 		bool attacking = false;
 
-		if (playerAttack.getCanAttack()) { // check eligibility for the player to attack
-			if(Input.GetKeyDown (KeyCode.Z)) { // get player's input
-				attacking = true; // player will attack
-				playerEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
+		if (grounded) {
+			if (playerAttack.getCanAttack()) { // check eligibility for the player to attack
+				if(Input.GetKeyDown (KeyCode.Z)) { // get player's input
+					attacking = true; // player will attack
+					playerEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
 
-				source.PlayOneShot (attackSound);
+					source.PlayOneShot (attackSound);
 
-				if (playerEnergy.getEnergy () < 20) // if player's energy below the capacity, player cannot attack
-					playerAttack.setCanAttack (false);
-			}
-		} else
-			playerEnergy.isExhausted (playerAttack, energyGUI); // player is exhausted, wait until energy is 100% replinished to attack again
+					if (playerEnergy.getEnergy () < 20) // if player's energy below the capacity, player cannot attack
+						playerAttack.setCanAttack (false);
+				}
+			} else
+				playerEnergy.isExhausted (playerAttack, energyGUI); // player is exhausted, wait until energy is 100% replinished to attack again
+		}
 		/* ---------------------- # ----------------------------- */
 
 		/* ---------------------- update animator ------------------- */

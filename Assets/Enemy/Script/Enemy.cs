@@ -127,15 +127,17 @@ public class Enemy : MonoBehaviour {
 		/* ----------------------- attack ------------------------------ */
 		bool attacking = false; // by default, enemy is not attacking
 
-		if (distance <= 50) { // if enemy is near player, enemy will start to attack player
-			if (enemyAttack.getCanAttack()) { // check if enemy are able to attack
-				attacking = true; // enemy will attack
-				enemyEnergy.energyDecrease (5); // enemy attempt to attack, energy will be decreased by 20
+		if (grounded) {
+			if (distance <= 50) { // if enemy is near player, enemy will start to attack player
+				if (enemyAttack.getCanAttack()) { // check if enemy are able to attack
+					attacking = true; // enemy will attack
+					enemyEnergy.energyDecrease (5); // enemy attempt to attack, energy will be decreased by 20
 
-				if (enemyEnergy.getEnergy () < 20) // if the last attack reduce the energy below the capcity
-					enemyAttack.setCanAttack (false);
-			} else
-				enemyEnergy.isExhausted (enemyAttack, energyGUI); // enemy exhausted, cannot attack until energy is replinished
+					if (enemyEnergy.getEnergy () < 20) // if the last attack reduce the energy below the capcity
+						enemyAttack.setCanAttack (false);
+				} else
+					enemyEnergy.isExhausted (enemyAttack, energyGUI); // enemy exhausted, cannot attack until energy is replinished
+			}
 		}
 		/* ---------------------- # ----------------------------- */
 
