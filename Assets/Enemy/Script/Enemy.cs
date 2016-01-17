@@ -70,12 +70,17 @@ public class Enemy : MonoBehaviour {
 			// enemy attack attempt successful, enemy score will be increased by enemy atk
 			playerScore.increaseScore (playerAttack.getAtk ());
 
+			// effects lepas kena hit
 			source.PlayOneShot (hitSound);
 
 			if (playerAttribute.getFacingLeft ())
-				GetComponent<Rigidbody2D> ().velocity = new Vector2(-100, 80);
+				GetComponent<Rigidbody2D> ().velocity = new Vector2(-150, 80);
 			else
-				GetComponent<Rigidbody2D> ().velocity = new Vector2(100, 80);
+				GetComponent<Rigidbody2D> ().velocity = new Vector2(150, 80);
+		} else if (gameObject.CompareTag ("RingBound")) {
+			enemyScore.decreaseScore (5);
+
+			transform.position = new Vector2 (0, 0);
 		}
 	}
 	/* -------------------------------------------------------------- */
@@ -92,14 +97,12 @@ public class Enemy : MonoBehaviour {
 			flip ();
 		else if (direction > 0 && !facingLeft)
 			flip ();
-
-		if (grounded) {
-			if (!(distance <= 20)) { // enemy akan berhenti bila distance <= 30
-				if (distance >= 100) // distance >= 100, enemy will start looking for player by decreasing it's speed
-					transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), (speed / 2));
-				else if (distance < 100) // distance < 100, enemy will chase player within it's sight
-					transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), speed);
-			}
+		
+		if (!(distance <= 20)) { // enemy akan berhenti bila distance <= 30
+			if (distance >= 100) // distance >= 100, enemy will start looking for player by decreasing it's speed
+				transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), (speed / 2));
+			else if (distance < 100) // distance < 100, enemy will chase player within it's sight
+				transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), speed);
 		}
 		/* -------------------------- # ------------------------------ */
 
@@ -111,12 +114,12 @@ public class Enemy : MonoBehaviour {
 		// calculate distance between enemy and player in terms of y-axis
 		float distanceY = transform.position.y - player.transform.position.y; // xleh pakai absolute value sbb nak enemy lompat bila player ada kat atas dia ja, bukan bawah dia
 		float distanceX = Mathf.Abs(transform.position.x - player.transform.position.x);
-		float vSpeed = player.GetComponent<Rigidbody2D>().velocity.y;
+		float playerVSpeed = player.GetComponent<Rigidbody2D>().velocity.y;
 
 		groundChecker.position = new Vector3 (transform.position.x, groundChecker.position.y, 0); // update grounchecker's position
 		grounded = Physics2D.OverlapCircle (groundChecker.position, .02f, targetGround); // check if the groundchecker overlap the ground
 
-		if ((vSpeed > 50) || (distanceX <= 100)) {
+		if ((playerVSpeed > 50) || (distanceX <= 100)) {
 			if ((distanceY *= -1) > 20) { // if the player is above enemy
 				if (grounded || doubleJump) { // if enemy is currently grounded or can doublejump
 					GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce); // enemy will jump or double jump

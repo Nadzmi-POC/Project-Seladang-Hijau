@@ -65,14 +65,18 @@ public class Player : MonoBehaviour {
 	// trigger functions
 	/* --------------------------- hit ------------------------------ */
 	void OnTriggerEnter2D(Collider2D gameObject) { // trigger when enemy are being hit player's attacker
-		if (gameObject.CompareTag("EnemyAttacker")) {
+		if (gameObject.CompareTag ("EnemyAttacker")) {
 			// player attack attempt successful, player score will be increased by player atk
-			enemyScore.increaseScore(enemyAttack.getAtk ());
+			enemyScore.increaseScore (enemyAttack.getAtk ());
 
 			if (enemyAttribute.getFacingLeft ())
-				GetComponent<Rigidbody2D> ().velocity = new Vector2(-100, 80);
+				GetComponent<Rigidbody2D> ().velocity = new Vector2 (-100, 80);
 			else
-				GetComponent<Rigidbody2D> ().velocity = new Vector2(100, 80);
+				GetComponent<Rigidbody2D> ().velocity = new Vector2 (100, 80);
+		} else if (gameObject.CompareTag ("RingBound")) {
+			playerScore.decreaseScore (5);
+
+			transform.position = new Vector2 (0, 0);
 		}
 	}
 	/* -------------------------------------------------------------- */
