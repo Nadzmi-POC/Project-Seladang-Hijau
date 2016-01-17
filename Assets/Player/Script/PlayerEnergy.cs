@@ -6,6 +6,7 @@ public class PlayerEnergy : MonoBehaviour {
 	// energy attribute
 	private float energy, maxEnergy, energyPercent;
 
+	// initialize energy attributes
 	void Awake() {
 		energy = 100;
 		maxEnergy = 100;

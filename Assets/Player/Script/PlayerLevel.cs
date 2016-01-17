@@ -5,6 +5,7 @@ public class PlayerLevel : MonoBehaviour {
 	// level attributes
 	private int level, scoreLevel;
 
+	// initialize level's attribute
 	void Awake() {
 		level = 1;
 		scoreLevel = 10;

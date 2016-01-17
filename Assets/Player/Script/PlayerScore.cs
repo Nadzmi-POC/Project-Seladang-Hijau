@@ -5,6 +5,7 @@ public class PlayerScore : MonoBehaviour {
 	// score attribute
 	private int score;
 
+	// initialize scroe attributes
 	void Awake() {
 		score = 0;
 	}
@@ -19,11 +20,11 @@ public class PlayerScore : MonoBehaviour {
 			score = 0;
 	}
 
-	public void increaseScore(int amount) {
+	public void increaseScore(int amount) { // increase the score by the amount
 		score += amount;
 	}
 
-	public void decreaseScore(int amount) {
+	public void decreaseScore(int amount) { // decrease the score by the amount
 		score -= amount;
 	}
 

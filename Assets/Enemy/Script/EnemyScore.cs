@@ -5,10 +5,11 @@ public class EnemyScore : MonoBehaviour {
 	// score attribute
 	private int score;
 
+	// initialize all score attribute
 	void Awake() {
 		score = 0;
 	}
-
+		
 	void Update() {
 		clampScore ();
 	}
@@ -19,11 +20,11 @@ public class EnemyScore : MonoBehaviour {
 			score = 0;
 	}
 
-	public void increaseScore(EnemyAttack enemyattack) {
-		score += enemyattack.getAtk ();
+	public void increaseScore(int amount) { // increase the score by the amount
+		score += amount;
 	}
 
-	public void decreaseScore(int amount) {
+	public void decreaseScore(int amount) { // decrease the score by the amount
 		score -= amount;
 	}
 
