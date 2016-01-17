@@ -70,9 +70,9 @@ public class Player : MonoBehaviour {
 			enemyScore.increaseScore(enemyAttack.getAtk ());
 
 			if (enemyAttribute.getFacingLeft ())
-				transform.Translate (Vector2.left * 30);
+				GetComponent<Rigidbody2D> ().velocity = new Vector2(-100, 80);
 			else
-				transform.Translate (Vector2.right * 30);
+				GetComponent<Rigidbody2D> ().velocity = new Vector2(100, 80);
 		}
 	}
 	/* -------------------------------------------------------------- */
@@ -97,7 +97,7 @@ public class Player : MonoBehaviour {
 		grounded = Physics2D.OverlapCircle (groundChecker.position, .02f, targetGround); // check if the groundchecker overlap the ground
 
 		if (grounded) // player currently grounded, player cannot double jump
-			doubleJump = false;
+			doubleJump = false; // player cannot do doublejump
 
 		if (Input.GetKeyDown (KeyCode.Space) && (grounded || !doubleJump)) {
 			GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce); // player can jump or double jump

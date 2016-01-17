@@ -72,10 +72,10 @@ public class Enemy : MonoBehaviour {
 
 			source.PlayOneShot (hitSound);
 
-			if (playerAttribute.getFacingLeft())
-				transform.Translate (Vector2.left * 30);
+			if (playerAttribute.getFacingLeft ())
+				GetComponent<Rigidbody2D> ().velocity = new Vector2(-100, 80);
 			else
-				transform.Translate (Vector2.right * 30);
+				GetComponent<Rigidbody2D> ().velocity = new Vector2(100, 80);
 		}
 	}
 	/* -------------------------------------------------------------- */
@@ -93,11 +93,13 @@ public class Enemy : MonoBehaviour {
 		else if (direction > 0 && !facingLeft)
 			flip ();
 
-		if (!(distance <= 20)) { // enemy akan berhenti bila distance <= 30
-			if (distance >= 100) // distance >= 100, enemy will start looking for player by decreasing it's speed
-				transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), (speed / 2));
-			else if (distance < 100) // distance < 100, enemy will chase player within it's sight
-				transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), speed);
+		if (grounded) {
+			if (!(distance <= 20)) { // enemy akan berhenti bila distance <= 30
+				if (distance >= 100) // distance >= 100, enemy will start looking for player by decreasing it's speed
+					transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), (speed / 2));
+				else if (distance < 100) // distance < 100, enemy will chase player within it's sight
+					transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), speed);
+			}
 		}
 		/* -------------------------- # ------------------------------ */
 
