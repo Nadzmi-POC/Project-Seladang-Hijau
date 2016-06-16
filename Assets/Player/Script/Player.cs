@@ -1,19 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using Assets.Player.Script;
 
 public class Player : MonoBehaviour {
-	// player's attribute
-	PlayerScore playerScore;
-	PlayerAttack playerAttack;
-	PlayerEnergy playerEnergy;
-	PlayerLevel playerLevel;
+    // player's attribute
+    public static PlayerAttribute playerAttribute;
 
 	// enemy's attribute
 	GameObject enemy;
 	Enemy enemyAttribute;
-	EnemyScore enemyScore;
-	EnemyAttack enemyAttack;
 
 	// player's other components
 	public LayerMask targetGround;
@@ -21,24 +16,29 @@ public class Player : MonoBehaviour {
 	public Collider2D attack;
 	public Text energyGUI, scoreGUI, lvlGUI;
 
-	public float speed, jumpForce; // player characteristic var (public)
+	public float jumpForce; // player characteristic var (public)
 	public AudioClip attackSound;
 
 	// action variables
-	private bool facingLeft;
+	private static bool facingLeft;
 	private bool grounded, doubleJump;
 
 	private AudioSource source;
 
 	void Awake() {
-		// intialize player's attribute
-		playerScore = GetComponent<PlayerScore> ();
-		playerAttack = GetComponent<PlayerAttack> ();
-		playerEnergy = GetComponent<PlayerEnergy> ();
-		playerLevel = GetComponent<PlayerLevel> ();
+        // initialize player's attribute
+        playerAttribute = new PlayerAttribute();
+        playerAttribute.Score = 0;
+        playerAttribute.Level = 1;
+        playerAttribute.LevelScore = 10;
+        playerAttribute.Energy = 100;
+        playerAttribute.MaxEnergy = 100;
+        playerAttribute.Speed = 2;
+        playerAttribute.Attack = 1;
+        playerAttribute.CanAttack = true;
 
-		// other flag status
-		grounded = false;
+        // other flag status
+        grounded = false;
 		facingLeft = true;
 		doubleJump = false;
 
@@ -46,16 +46,19 @@ public class Player : MonoBehaviour {
 	}
 
 	void Start () {
-		// initialize enemy's attribute
-		enemy = GameObject.FindGameObjectWithTag("Enemy"); // find enemy gameobject int the scene
+        // initialize enemy's attribute
+        enemy = GameObject.FindGameObjectWithTag("Enemy"); // find enemy gameobject int the scene
 		enemyAttribute = enemy.GetComponent<Enemy> ();
-		enemyScore = enemy.GetComponent<EnemyScore> ();
-		enemyAttack = enemy.GetComponent<EnemyAttack> ();
 	}
 
 	void Update() { // logic update
-		playerLevel.checkLevelUP (playerScore, playerEnergy, playerAttack); // check whether player are eligible for level up
-	}
+        PlayerEnergyProvider.energyIncrease(1);
+        PlayerLevelprovider.checkLevelUP (); // check whether player are eligible for level up
+
+        PlayerScoreProvider.clampScore ();
+        PlayerEnergyProvider.energyClamp ();
+        PlayerLevelprovider.levelClamp();
+    }
 
 	void FixedUpdate () { // physic update
 		action ();
@@ -67,14 +70,14 @@ public class Player : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D gameObject) { // trigger when enemy are being hit player's attacker
 		if (gameObject.CompareTag ("EnemyAttacker")) {
 			// player attack attempt successful, player score will be increased by player atk
-			enemyScore.increaseScore (enemyAttack.getAtk ());
+			EnemyScoreProvider.increaseScore (Enemy.enemyAttribute.Attack);
 
 			if (enemyAttribute.getFacingLeft ())
 				GetComponent<Rigidbody2D> ().velocity = new Vector2 (-100, 80);
 			else
 				GetComponent<Rigidbody2D> ().velocity = new Vector2 (100, 80);
 		} else if (gameObject.CompareTag ("RingBound")) {
-			playerScore.decreaseScore (5);
+            PlayerScoreProvider.decreaseScore (5);
 
 			transform.position = new Vector2 (0, 0);
 		}
@@ -93,7 +96,7 @@ public class Player : MonoBehaviour {
 			flip ();
 
 		// move player according to the input axis
-		transform.position += new Vector3 ((movement * speed), 0, 0);
+		transform.position += new Vector3 ((movement * playerAttribute.Speed), 0, 0);
 		/* -------------------------- # ------------------------------ */
 
 		/* ------------------------ jump ----------------------------- */
@@ -104,7 +107,8 @@ public class Player : MonoBehaviour {
 			doubleJump = false; // player cannot do doublejump
 
 		if (Input.GetKeyDown (KeyCode.Space) && (grounded || !doubleJump)) {
-			GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce); // player can jump or double jump
+			// GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpForce); // player can jump or double jump
+            GetComponent<Rigidbody2D>().position += (Vector2.up * jumpForce);
 
 			if(!doubleJump && !grounded) // player are not on the ground and not double jump yet, player can double jump
 				doubleJump = true;
@@ -115,18 +119,18 @@ public class Player : MonoBehaviour {
 		bool attacking = false;
 
 		if (grounded) {
-			if (playerAttack.getCanAttack()) { // check eligibility for the player to attack
+			if (playerAttribute.CanAttack) { // check eligibility for the player to attack
 				if(Input.GetKeyDown (KeyCode.Z)) { // get player's input
 					attacking = true; // player will attack
-					playerEnergy.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
+                    PlayerEnergyProvider.energyDecrease (20); // player attempt to attack, energy will be decreased by 20
 
 					source.PlayOneShot (attackSound);
 
-					if (playerEnergy.getEnergy () < 20) // if player's energy below the capacity, player cannot attack
-						playerAttack.setCanAttack (false);
+                    if (playerAttribute.Energy < 20) // if player's energy below the capacity, player cannot attack
+                        playerAttribute.CanAttack = false; // player cannot attack
 				}
 			} else
-				playerEnergy.isExhausted (playerAttack, energyGUI); // player is exhausted, wait until energy is 100% replinished to attack again
+                PlayerEnergyProvider.isExhausted (energyGUI); // player is exhausted, wait until energy is 100% replinished to attack again
 		}
 		/* ---------------------- # ----------------------------- */
 
@@ -140,9 +144,9 @@ public class Player : MonoBehaviour {
 
 	/* -------------------- GUI update ------------------------- */
 	void guiUpdate() { // update the ui
-		energyGUI.text = "ENERGY: " + playerEnergy.getEnergyPercent().ToString ("F0") + "%";
-		scoreGUI.text = "SCORE: " + playerScore.getScore().ToString ();
-		lvlGUI.text = "LEVEL: " + playerLevel.getLevel().ToString ();
+		energyGUI.text = "ENERGY: " + playerAttribute.EnergyPercent.ToString ("F0") + "%";
+		scoreGUI.text = "SCORE: " + playerAttribute.Score.ToString();
+		lvlGUI.text = "LEVEL: " + playerAttribute.Level.ToString ();
 	}
 	/* -------------------------- # --------------------------- */
 
@@ -155,6 +159,6 @@ public class Player : MonoBehaviour {
 		transform.localScale = theScale;
 	}
 
-	public bool getFacingLeft() { return facingLeft; }
+	public static bool getFacingLeft() { return facingLeft; }
 	/* ------------------------- # -----------------------------*/
 }

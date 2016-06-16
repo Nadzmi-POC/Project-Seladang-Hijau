@@ -1,19 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using Assets.Enemy.Script;
 
 public class Enemy : MonoBehaviour {
-	// enemy's attribute
-	EnemyScore enemyScore;
-	EnemyAttack enemyAttack;
-	EnemyEnergy enemyEnergy;
-	EnemyLevel enemyLevel;
+    // enemy's attribute
+    public static EnemyAttribute enemyAttribute;
 
 	// player's attribute
 	GameObject player;
-	Player playerAttribute;
-	PlayerScore playerScore;
-	PlayerAttack playerAttack;
 
 	// enemy's other components
 	public LayerMask targetGround;
@@ -21,7 +15,7 @@ public class Enemy : MonoBehaviour {
 	public Collider2D attack;
 	public Text energyGUI, scoreGUI, lvlGUI;
 
-	public float speed, jumpForce; // player characteristic var (public)
+	public float jumpForce; // player characteristic var (public)
 	public AudioClip hitSound;
 
 	// action variables
@@ -32,14 +26,19 @@ public class Enemy : MonoBehaviour {
 	private AudioSource source;
 
 	void Awake() {
-		// intialize enemy's attribute
-		enemyScore = GetComponent<EnemyScore> ();
-		enemyAttack = GetComponent<EnemyAttack> ();
-		enemyEnergy = GetComponent<EnemyEnergy> ();
-		enemyLevel = GetComponent<EnemyLevel> ();
+        // intialize enemy's attribute
+        enemyAttribute = new EnemyAttribute();
+        enemyAttribute.Score = 0;
+        enemyAttribute.Level = 1;
+        enemyAttribute.LevelScore = 10;
+        enemyAttribute.Energy = 100;
+        enemyAttribute.MaxEnergy = 100;
+        enemyAttribute.Speed = 2;
+        enemyAttribute.Attack = 1;
+        enemyAttribute.CanAttack = true;
 
-		// other flag status
-		facingLeft = true; // enemy start in the scene facing left
+        // other flag status
+        facingLeft = true; // enemy start in the scene facing left
 		grounded = false;
 		doubleJump = false;
 
@@ -47,16 +46,18 @@ public class Enemy : MonoBehaviour {
 	}
 
 	void Start () {
-		// initialize player's attributes
-		player = GameObject.FindGameObjectWithTag("Player"); // find player's gamobject in the scene
-		playerAttribute = player.GetComponent<Player> ();
-		playerScore = player.GetComponent<PlayerScore> ();
-		playerAttack = player.GetComponent<PlayerAttack> ();
+        // initialize player's attributes
+        player = GameObject.FindGameObjectWithTag("Player"); // find player's gamobject in the scene
 	}
 
 	void Update() { // logic update
-		enemyLevel.checkLevelUP (enemyScore, enemyEnergy, enemyAttack); // check whether the enemy is eligible to level up
-	}
+        PlayerEnergyProvider.energyIncrease(1);
+        EnemyLevelProvider.checkLevelUP(); // check whether the enemy is eligible to level up
+
+        EnemyEnergyProvider.energyClamp();
+        EnemyScoreProvider.clampScore();
+        EnemyLevelProvider.levelClamp();
+    }
 
 	void FixedUpdate () { // physic update
 		action ();
@@ -67,18 +68,18 @@ public class Enemy : MonoBehaviour {
 	/* --------------------------- hit ------------------------------ */
 	void OnTriggerEnter2D(Collider2D gameObject) { // trigger when enemy are being hit player's attacker
 		if (gameObject.CompareTag("PlayerAttacker")) {
-			// enemy attack attempt successful, enemy score will be increased by enemy atk
-			playerScore.increaseScore (playerAttack.getAtk ());
+            // enemy attack attempt successful, enemy score will be increased by enemy atk
+            PlayerScoreProvider.increaseScore(Player.playerAttribute.Attack);
 
 			// effects lepas kena hit
 			source.PlayOneShot (hitSound);
 
-			if (playerAttribute.getFacingLeft ())
+			if (Player.getFacingLeft ())
 				GetComponent<Rigidbody2D> ().velocity = new Vector2(-150, 80);
 			else
 				GetComponent<Rigidbody2D> ().velocity = new Vector2(150, 80);
 		} else if (gameObject.CompareTag ("RingBound")) {
-			enemyScore.decreaseScore (5);
+            EnemyScoreProvider.decreaseScore(5);
 
 			transform.position = new Vector2 (0, 0);
 		}
@@ -100,9 +101,9 @@ public class Enemy : MonoBehaviour {
 		
 		if (!(distance <= 20)) { // enemy akan berhenti bila distance <= 30
 			if (distance >= 100) // distance >= 100, enemy will start looking for player by decreasing it's speed
-				transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), (speed / 2));
+				transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), (enemyAttribute.Speed / 2));
 			else if (distance < 100) // distance < 100, enemy will chase player within it's sight
-				transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), speed);
+				transform.position = Vector2.MoveTowards (transform.position, new Vector2 (player.transform.position.x, transform.position.y), enemyAttribute.Speed);
 		}
 		/* -------------------------- # ------------------------------ */
 
@@ -134,14 +135,14 @@ public class Enemy : MonoBehaviour {
 
 		if (grounded) {
 			if (distance <= 50) { // if enemy is near player, enemy will start to attack player
-				if (enemyAttack.getCanAttack()) { // check if enemy are able to attack
+				if (enemyAttribute.CanAttack) { // check if enemy are able to attack
 					attacking = true; // enemy will attack
-					enemyEnergy.energyDecrease (5); // enemy attempt to attack, energy will be decreased by 20
+					EnemyEnergyProvider.energyDecrease (5); // enemy attempt to attack, energy will be decreased by 20
 
-					if (enemyEnergy.getEnergy () < 20) // if the last attack reduce the energy below the capcity
-						enemyAttack.setCanAttack (false);
+					if (enemyAttribute.Energy < 20) // if the last attack reduce the energy below the capcity
+                        enemyAttribute.CanAttack = false;
 				} else
-					enemyEnergy.isExhausted (enemyAttack, energyGUI); // enemy exhausted, cannot attack until energy is replinished
+                    EnemyEnergyProvider.isExhausted (energyGUI); // enemy exhausted, cannot attack until energy is replinished
 			}
 		}
 		/* ---------------------- # ----------------------------- */
@@ -154,9 +155,9 @@ public class Enemy : MonoBehaviour {
 
 	/* -------------------- GUI update ------------------------- */
 	void guiUpdate() { // update the ui
-		energyGUI.text = "ENERGY: " + enemyEnergy.getEnergyPercent().ToString ("F0") + "%";
-		scoreGUI.text = "SCORE: " + enemyScore.getScore().ToString ();
-		lvlGUI.text = "LEVEL: " + enemyLevel.getLevel().ToString ();
+		energyGUI.text = "ENERGY: " + enemyAttribute.EnergyPercent.ToString ("F0") + "%";
+		scoreGUI.text = "SCORE: " + enemyAttribute.Score.ToString ();
+		lvlGUI.text = "LEVEL: " + enemyAttribute.Level.ToString ();
 	}
 	/* -------------------------- # --------------------------- */
 

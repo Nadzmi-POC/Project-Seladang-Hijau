@@ -1,7 +1,8 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{3022BDD7-9081-B030-1404-CC4E575639B0}") = "Project Score Attack", "Assembly-CSharp.csproj", "{B6C5B4F0-5BD5-35B8-F87B-61A7CED49055}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{57D754E4-39CF-E0B7-6651-4184481498F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,25 +10,24 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B6C5B4F0-5BD5-35B8-F87B-61A7CED49055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6C5B4F0-5BD5-35B8-F87B-61A7CED49055}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6C5B4F0-5BD5-35B8-F87B-61A7CED49055}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6C5B4F0-5BD5-35B8-F87B-61A7CED49055}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57D754E4-39CF-E0B7-6651-4184481498F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57D754E4-39CF-E0B7-6651-4184481498F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57D754E4-39CF-E0B7-6651-4184481498F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57D754E4-39CF-E0B7-6651-4184481498F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-														GlobalSection(MonoDevelopProperties) = preSolution
+	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
-		$0.TextStylePolicy = $1
+		$0.TextStylePolicy = $3
 		$1.inheritsSet = null
 		$1.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $2
 		$2.inheritsSet = Mono
 		$2.inheritsScope = text/x-csharp
 		$2.scope = text/x-csharp
-		$0.TextStylePolicy = $3
 		$3.FileWidth = 120
 		$3.TabWidth = 4
 		$3.IndentWidth = 4
@@ -36,5 +36,4 @@ Global
 		$3.inheritsScope = text/plain
 		$3.scope = text/plain
 	EndGlobalSection
-
 EndGlobal
